@@ -34,7 +34,6 @@ fn read_input() -> Vec<u16> {
 fn solve(program: &[u16], parts: u8) -> (u16, u16) {
     let mut pt1: u16 = 0;
     let mut pt2: u16 = 0;
-    println!("{}", parts);
     if parts & PART1 != 0 {
         let mut last: u16 = 0;
         for current in program {
