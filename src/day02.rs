@@ -123,7 +123,7 @@ mod day02 {
     }
 
     #[bench]
-    fn bench_pt2(b: &mut test::Bencher) {
+    fn bench_part2(b: &mut test::Bencher) {
         let input: PuzzleInput = CODE.to_vec();
         b.iter(|| solve_part2(&input));
     }
