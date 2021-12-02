@@ -6,26 +6,8 @@ use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
 
-struct Problem {
-    part1: bool,
-    part2: bool
-}
-
-impl Problem {
-    pub fn new(value: u8) -> Problem {
-        let mut p: Problem = Problem { part1: false, part2: false };
-        match value {
-            1 => p.part1 = true,
-            2 => p.part2 = true,
-            3 => {
-                p.part1 = true;
-                p.part2 = true;
-            }
-            _ => panic!("Only 1, 2 or 3 - You gave {}", value),
-        }
-        p
-    }
-}
+const PART1: u8 = 0b01;
+const PART2: u8 = 0b10;
 
 fn read_input() -> Vec<u16> {
     let filename = "input/day01.txt";
@@ -49,10 +31,11 @@ fn read_input() -> Vec<u16> {
     input
 }
 
-fn solve(program: &[u16], problem: Problem) -> (u16, u16) {
+fn solve(program: &[u16], parts: u8) -> (u16, u16) {
     let mut pt1: u16 = 0;
     let mut pt2: u16 = 0;
-    if problem.part1 {
+    println!("{}", parts);
+    if parts & PART1 != 0 {
         let mut last: u16 = 0;
         for current in program {
             if last > 0 && last < *current {
@@ -61,7 +44,7 @@ fn solve(program: &[u16], problem: Problem) -> (u16, u16) {
             last = *current;
         }
     };
-    if problem.part2 {
+    if parts & PART2 != 0 {
         let mut last: u16 = 0;
         let mut current: u16;
         let mut pc: u16 = 0;
@@ -80,8 +63,7 @@ fn solve(program: &[u16], problem: Problem) -> (u16, u16) {
 
 fn main() {
     let code = read_input();
-    let parts = Problem::new(3);
-    let (pt1, pt2) = solve(&code, parts);
+    let (pt1, pt2) = solve(&code, PART1 | PART2);
     println!("Part1: {:?}", pt1);
     println!("Part2: {:?}", pt2);
 }
@@ -94,13 +76,13 @@ mod tests {
 
     #[test]
     fn part1() {
-        let (pt1, _) = solve(&CODE, Problem::new(1));
+        let (pt1, _) = solve(&CODE, PART1);
         assert_eq!(pt1, 7);
     }
 
     #[test]
     fn part2() {
-        let (_, pt2) = solve(&CODE, Problem::new(2));
+        let (_, pt2) = solve(&CODE, PART2);
         assert_eq!(pt2, 5);
     }
 }
