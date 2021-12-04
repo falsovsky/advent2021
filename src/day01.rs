@@ -31,31 +31,44 @@ fn read_input() -> Vec<u16> {
     input
 }
 
+fn solve_part1(program: &[u16]) -> u16 {
+    let mut pt1: u16 = 0;
+    let mut last: u16 = 0;
+    for current in program {
+        if last > 0 && last < *current {
+            pt1 += 1;
+        }
+        last = *current;
+    }
+    pt1
+}
+
+fn solve_part2(program: &[u16]) -> u16 {
+    let mut pt2: u16 = 0;
+    let mut last: u16 = 0;
+    let mut current: u16;
+    let mut pc: usize = 0;
+    while pc < program.len() - 2 {
+        current = program[pc] + program[pc + 1] + program[pc + 2];
+        if last > 0 && last < current {
+            pt2 += 1;
+        }
+        last = current;
+        pc += 1;
+    }
+    pt2
+}
+
 fn solve(program: &[u16], parts: u8) -> (u16, u16) {
+    let runpt1: bool = parts & PART1 != 0;
+    let runpt2: bool = parts & PART2 != 0;
     let mut pt1: u16 = 0;
     let mut pt2: u16 = 0;
-    if parts & PART1 != 0 {
-        let mut last: u16 = 0;
-        for current in program {
-            if last > 0 && last < *current {
-                pt1 += 1;
-            }
-            last = *current;
-        }
-    };
-    if parts & PART2 != 0 {
-        let mut last: u16 = 0;
-        let mut current: u16;
-        let mut pc: u16 = 0;
-        while pc < (program.len() - 2) as u16 {
-            current = program[pc as usize] + program[(pc + 1) as usize]
-                + program[(pc + 2) as usize];
-            if last > 0 && last < current {
-                pt2 += 1;
-            }
-            last = current;
-            pc += 1;
-        }
+    if runpt1 {
+        pt1 = solve_part1(&program);
+    }
+    if runpt2 {
+        pt2 = solve_part2(&program);
     }
     (pt1, pt2)
 }
@@ -68,7 +81,7 @@ fn main() {
 }
 
 #[cfg(test)]
-mod tests {
+mod day01 {
     use crate::*;
 
     const CODE: [u16; 10]  = [199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
@@ -84,9 +97,9 @@ mod tests {
         let (_, pt2) = solve(&CODE, PART2);
         assert_eq!(pt2, 5);
     }
-}
 
-#[bench]
-fn bench_day01(b: &mut test::Bencher) {
-    b.iter(|| main());
+    #[bench]
+    fn bench_day01(b: &mut test::Bencher) {
+        b.iter(|| main());
+    }
 }

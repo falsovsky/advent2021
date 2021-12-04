@@ -9,14 +9,16 @@ use std::io::BufReader;
 const PART1: u8 = 0b01;
 const PART2: u8 = 0b10;
 
-fn read_input() -> Vec<u32> {
+type Report = Vec<u32>;
+
+fn read_input() -> Report {
     let filename = "input/day03.txt";
     let fp = match File::open(filename) {
         Ok(file) => file,
         Err(error) => panic!("{} - {}", filename, error),
     };
     let buffer = BufReader::new(&fp);
-    let mut input: Vec<u32> = Vec::new();
+    let mut input: Report = Vec::new();
     for line in buffer.lines() {
         let line_str = match line {
             Ok(value) => value,
@@ -28,7 +30,7 @@ fn read_input() -> Vec<u32> {
     input
 }
 
-fn count_bits(program: &Vec<u32>, position: usize) -> (u16, u16) {
+fn count_bits(program: &Report, position: &usize) -> (u16, u16) {
     let mut count: (u16, u16) = (0, 0);
     for item in program {
         if item & (1 << position) == 0 {
@@ -40,11 +42,11 @@ fn count_bits(program: &Vec<u32>, position: usize) -> (u16, u16) {
     count
 }
 
-fn solve_part1(program: &Vec<u32>, size: usize) -> u32 {
+fn solve_part1(program: &Report, size: usize) -> u32 {
     let mut gamma: u32 = 0;
     let mut epsilon: u32 = 0;
     for bit in (0..size).rev() {
-        let count = count_bits(program, bit);
+        let count = count_bits(program, &bit);
         if count.1 > count.0 {
             gamma |= 1 << bit;
         } else {
@@ -54,21 +56,21 @@ fn solve_part1(program: &Vec<u32>, size: usize) -> u32 {
     gamma * epsilon
 }
 
-fn solve_part2(program: &Vec<u32>, size: usize) -> u32 {
+fn solve_part2(program: &Report, size: usize) -> u32 {
     let mut list1 = program.to_owned();
     let mut list2 = program.to_owned();
     for bit in (0..size).rev() {
         // Oxygen
-        let mut count: (u16, u16) = count_bits(&list1, bit);
+        let mut count: (u16, u16) = count_bits(&list1, &bit);
         let mut value: bool = false;
-        if count.1 > count.0 || count.0 == count.1 {
+        if count.1 >= count.0 {
             value = true;
         }
         if list1.len() > 1 {
             list1.retain(|&i| (i & (1 << bit) != 0) == value);
         }
         // CO2
-        count = count_bits(&list2, bit);
+        count = count_bits(&list2, &bit);
         value = true;
         if count.0 <= count.1 {
             value = false;
@@ -83,7 +85,7 @@ fn solve_part2(program: &Vec<u32>, size: usize) -> u32 {
     oxygen * co2
 }
 
-fn solve(program: &Vec<u32>, size: usize, parts: u8) -> (u32, u32) {
+fn solve(program: &Report, size: usize, parts: u8) -> (u32, u32) {
     let runpt1: bool = parts & PART1 != 0;
     let runpt2: bool = parts & PART2 != 0;
     let mut pt1: u32 = 0;
@@ -105,7 +107,7 @@ fn main() {
 }
 
 #[cfg(test)]
-mod day02 {
+mod day03 {
     use crate::*;
 
     const CODE: [u32; 12] = [

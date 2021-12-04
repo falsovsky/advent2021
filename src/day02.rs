@@ -115,16 +115,4 @@ mod day02 {
     fn bench_day02(b: &mut test::Bencher) {
         b.iter(|| main());
     }
-
-    #[bench]
-    fn bench_part1(b: &mut test::Bencher) {
-        let input: PuzzleInput = CODE.to_vec();
-        b.iter(|| solve_part1(&input));
-    }
-
-    #[bench]
-    fn bench_part2(b: &mut test::Bencher) {
-        let input: PuzzleInput = CODE.to_vec();
-        b.iter(|| solve_part2(&input));
-    }
 }
