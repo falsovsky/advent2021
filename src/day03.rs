@@ -28,19 +28,24 @@ fn read_input() -> Vec<u32> {
     input
 }
 
+fn count_bits(program: &Vec<u32>, position: usize) -> (u16, u16) {
+    let mut count: (u16, u16) = (0, 0);
+    for item in program {
+        if item & (1 << position) == 0 {
+            count.0 += 1;
+        } else {
+            count.1 += 1;
+        }
+    }
+    count
+}
+
 fn solve_part1(program: &Vec<u32>, size: usize) -> u32 {
     let mut gamma: u32 = 0;
     let mut epsilon: u32 = 0;
     for bit in (0..size).rev() {
-        let mut common: (u16, u16) = (0, 0);
-        for item in program {
-            if item & (1 << bit) == 0 {
-                common.0 += 1;
-            } else {
-                common.1 += 1;
-            }
-        }
-        if common.1 > common.0 {
+        let count = count_bits(program, bit);
+        if count.1 > count.0 {
             gamma |= 1 << bit;
         } else {
             epsilon |= 1 << bit;
@@ -50,45 +55,29 @@ fn solve_part1(program: &Vec<u32>, size: usize) -> u32 {
 }
 
 fn solve_part2(program: &Vec<u32>, size: usize) -> u32 {
-    let mut p2 = program.to_owned();
+    let mut list1 = program.to_owned();
+    let mut list2 = program.to_owned();
     for bit in (0..size).rev() {
-        let mut common: (u16, u16) = (0, 0);
-        let mut keep: bool = false;
-        for item in &p2 {
-            if item & (1 << bit) == 0 {
-                common.0 += 1;
-            } else {
-                common.1 += 1;
-            }
+        let mut count: (u16, u16) = count_bits(&list1, bit);
+        let mut value: bool = false;
+        if count.1 > count.0 || count.0 == count.1 {
+            value = true;
         }
-        if common.1 > common.0 || common.0 == common.1 {
-            keep = true;
+        if list1.len() > 1 {
+            list1.retain(|&i| (i & (1 << bit) != 0) == value);
         }
-        if p2.len() > 1 {
-            p2.retain(|&i| (i & (1 << bit) != 0) == keep);
+        // CO2
+        count = count_bits(&list2, bit);
+        value = true;
+        if count.0 <= count.1 {
+            value = false;
+        }
+        if list2.len() > 1 {
+            list2.retain(|&i| (i & (1 << bit) != 0) == value);
         }
     }
-    let oxygen: u32 = p2[0];
-
-    let mut p2 = program.to_owned();
-    for bit in (0..size).rev() {
-        let mut common: (u16, u16) = (0, 0);
-        let mut keep: bool = true;
-        for item in &p2 {
-            if item & (1 << bit) == 0 {
-                common.0 += 1;
-            } else {
-                common.1 += 1;
-            }
-        }
-        if common.0 <= common.1 {
-            keep = false;
-        }
-        if p2.len() > 1 {
-            p2.retain(|&i| (i & (1 << bit) != 0) == keep);
-        }
-    }
-    let co2: u32 = p2[0];
+    let oxygen: u32 = list1[0];
+    let co2: u32 = list2[0];
 
     oxygen * co2
 }

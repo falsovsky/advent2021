@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "advent2015"
+name = "advent2021"
 version = "0.1.0"
