@@ -44,15 +44,13 @@ fn count_bits(program: &Report, position: &usize) -> (u16, u16) {
 
 fn solve_part1(program: &Report, size: &usize) -> u32 {
     let mut gamma: u32 = 0;
-    let mut epsilon: u32 = 0;
     for bit in (0..*size).rev() {
         let count = count_bits(program, &bit);
         if count.1 > count.0 {
             gamma |= 1 << bit;
-        } else {
-            epsilon |= 1 << bit;
         }
     }
+    let epsilon: u32 = !gamma ^ 0b11111111111111111111000000000000;
     gamma * epsilon
 }
 
