@@ -58,6 +58,7 @@ fn solve_part2(program: &Vec<u32>, size: usize) -> u32 {
     let mut list1 = program.to_owned();
     let mut list2 = program.to_owned();
     for bit in (0..size).rev() {
+        // Oxygen
         let mut count: (u16, u16) = count_bits(&list1, bit);
         let mut value: bool = false;
         if count.1 > count.0 || count.0 == count.1 {
