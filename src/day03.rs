@@ -42,10 +42,10 @@ fn count_bits(program: &Report, position: &usize) -> (u16, u16) {
     count
 }
 
-fn solve_part1(program: &Report, size: usize) -> u32 {
+fn solve_part1(program: &Report, size: &usize) -> u32 {
     let mut gamma: u32 = 0;
     let mut epsilon: u32 = 0;
-    for bit in (0..size).rev() {
+    for bit in (0..*size).rev() {
         let count = count_bits(program, &bit);
         if count.1 > count.0 {
             gamma |= 1 << bit;
@@ -56,10 +56,10 @@ fn solve_part1(program: &Report, size: usize) -> u32 {
     gamma * epsilon
 }
 
-fn solve_part2(program: &Report, size: usize) -> u32 {
+fn solve_part2(program: &Report, size: &usize) -> u32 {
     let mut list1 = program.to_owned();
     let mut list2 = program.to_owned();
-    for bit in (0..size).rev() {
+    for bit in (0..*size).rev() {
         // Oxygen
         let mut count: (u16, u16) = count_bits(&list1, &bit);
         let mut value: bool = false;
@@ -85,7 +85,7 @@ fn solve_part2(program: &Report, size: usize) -> u32 {
     oxygen * co2
 }
 
-fn solve(program: &Report, size: usize, parts: u8) -> (u32, u32) {
+fn solve(program: &Report, size: &usize, parts: u8) -> (u32, u32) {
     let runpt1: bool = parts & PART1 != 0;
     let runpt2: bool = parts & PART2 != 0;
     let mut pt1: u32 = 0;
@@ -101,7 +101,7 @@ fn solve(program: &Report, size: usize, parts: u8) -> (u32, u32) {
 
 fn main() {
     let code = read_input();
-    let (pt1, pt2) = solve(&code, 12, PART1 | PART2);
+    let (pt1, pt2) = solve(&code, &12, PART1 | PART2);
     println!("Part1: {:?}", pt1);
     println!("Part2: {:?}", pt2);
 }
@@ -128,14 +128,14 @@ mod day03 {
     #[test]
     fn part1() {
         let input = CODE.to_vec();
-        let (pt1, _) = solve(&input, 5, PART1);
+        let (pt1, _) = solve(&input, &5, PART1);
         assert_eq!(pt1, 198);
     }
 
     #[test]
     fn part2() {
         let input = CODE.to_vec();
-        let (_, pt2) = solve(&input, 5, PART2);
+        let (_, pt2) = solve(&input, &5, PART2);
         assert_eq!(pt2, 230);
     }
 

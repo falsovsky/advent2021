@@ -25,7 +25,7 @@ fn read_input() -> PuzzleInput {
             Err(error) => panic!("Could not read anything - {}", error),
         };
         let values: Vec<&str> = line_str.split_whitespace().collect();
-        let movement: char = values[0].chars().nth(0).expect("Index 0 not found");
+        let movement: char = values[0].chars().next().expect("Index 0 not found");
         let many: u32 = values[1].parse::<u32>()
             .expect("Could not parse Index 1 to int");
         input.push((movement, many));
@@ -69,10 +69,10 @@ fn solve(program: &PuzzleInput, parts: u8) -> (u32, u32) {
     let mut pt1: u32 = 0;
     let mut pt2: u32 = 0;
     if runpt1 {
-        pt1 = solve_part1(&program);
+        pt1 = solve_part1(program);
     }
     if runpt2 {
-        pt2 = solve_part2(&program);
+        pt2 = solve_part2(program);
     }
     (pt1, pt2)
 }

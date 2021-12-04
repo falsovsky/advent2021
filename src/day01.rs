@@ -65,10 +65,10 @@ fn solve(program: &[u16], parts: u8) -> (u16, u16) {
     let mut pt1: u16 = 0;
     let mut pt2: u16 = 0;
     if runpt1 {
-        pt1 = solve_part1(&program);
+        pt1 = solve_part1(program);
     }
     if runpt2 {
-        pt2 = solve_part2(&program);
+        pt2 = solve_part2(program);
     }
     (pt1, pt2)
 }
