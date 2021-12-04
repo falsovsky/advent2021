@@ -126,14 +126,14 @@ mod day03 {
     ];
 
     #[test]
-    fn test_part1() {
+    fn part1() {
         let input = CODE.to_vec();
         let (pt1, _) = solve(&input, 5, PART1);
         assert_eq!(pt1, 198);
     }
 
     #[test]
-    fn test_part2() {
+    fn part2() {
         let input = CODE.to_vec();
         let (_, pt2) = solve(&input, 5, PART2);
         assert_eq!(pt2, 230);

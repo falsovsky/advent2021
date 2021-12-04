@@ -98,14 +98,14 @@ mod day02 {
     ];
 
     #[test]
-    fn test_part1() {
+    fn part1() {
         let input: PuzzleInput = CODE.to_vec();
         let (pt1, _) = solve(&input, PART1);
         assert_eq!(pt1, 150);
     }
 
     #[test]
-    fn test_part2() {
+    fn part2() {
         let input: PuzzleInput = CODE.to_vec();
         let (_, pt2) = solve(&input, PART2);
         assert_eq!(pt2, 900);
