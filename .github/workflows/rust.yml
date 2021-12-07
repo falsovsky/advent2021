@@ -20,7 +20,7 @@ jobs:
       - name: Run benchmark
         run: cargo +nightly bench | tee output.txt
       - name: Store benchmark result
-        uses: falsovsky/advent2021@v1
+        uses: benchmark-action/github-action-benchmark@v1
         with:
           name: Rust Benchmark
           tool: 'cargo'
