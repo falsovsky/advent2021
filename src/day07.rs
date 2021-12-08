@@ -26,25 +26,19 @@ fn read_input() -> Vec<u64> {
             input.push(value.parse::<u64>().expect("Could not convert to u64"))
         }
     }
+    input.sort();
     input
 }
 
 fn solve_part1(input: &Vec<u64>) -> u64 {
-    let mut fuel: u64 = u64::MAX;
-    for magic in input {
-        let mut thisfuel: u64 = 0;
-        for crab in input {
-            if *crab > *magic {
-                thisfuel += *crab - *magic;
-            } else if *magic > *crab {
-                thisfuel += *magic - *crab;
-            }
-            if thisfuel > fuel {
-                break;
-            }
-        }
-        if thisfuel < fuel {
-            fuel = thisfuel;
+    let mut fuel: u64 = 0;
+    let mid = input.len() / 2;
+    let magic = input[mid];
+    for crab in input {
+        if *crab > magic {
+            fuel += *crab - magic;
+        } else if magic > *crab {
+            fuel += magic - *crab;
         }
     }
     fuel
@@ -52,7 +46,13 @@ fn solve_part1(input: &Vec<u64>) -> u64 {
 
 fn solve_part2(input: &Vec<u64>) -> u64 {
     let mut fuel: u64 = u64::MAX;
-    for magic in *input.iter().min().unwrap()..*input.iter().max().unwrap() as u64 {
+    let mut sum: u64 = 0;
+    for x in input {
+        sum = sum + x;
+    }
+    let avg = sum as f32 / input.len() as f32;
+    let magics: Vec<u64> = vec![avg.floor() as u64, avg.ceil() as u64];
+    for magic in magics {
         let mut thisfuel: u64 = 0;
         for crab in input {
             let mut start: u64 = 0;
@@ -68,9 +68,6 @@ fn solve_part2(input: &Vec<u64>) -> u64 {
             for _ in start..end {
                 thisfuel += add;
                 add += 1;
-            }
-            if thisfuel > fuel {
-                break;
             }
         }
         if thisfuel < fuel {
@@ -109,14 +106,16 @@ mod day07 {
 
     #[test]
     fn part1() {
-        let input = CODE.to_vec();
+        let mut input = CODE.to_vec();
+        input.sort();
         let (pt1, _) = solve(&input, PART1);
         assert_eq!(pt1, 37);
     }
 
     #[test]
     fn part2() {
-        let input = CODE.to_vec();
+        let mut input = CODE.to_vec();
+        input.sort();
         let (_, pt2) = solve(&input, PART2);
         assert_eq!(pt2, 168);
 
