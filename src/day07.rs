@@ -39,6 +39,9 @@ fn solve_part1(input: &Vec<u64>) -> u64 {
             } else if *magic > *crab {
                 thisfuel += *magic - *crab;
             }
+            if thisfuel > fuel {
+                break;
+            }
         }
         if thisfuel < fuel {
             fuel = thisfuel;
@@ -57,28 +60,17 @@ fn solve_part2(input: &Vec<u64>) -> u64 {
             if *crab > magic {
                 start = magic;
                 end = *crab;
-                /*
-                let mut add = 1;
-                for _ in magic..*crab {
-                    thisfuel += add;
-                    add += 1;
-                }
-                */
             } else if magic > *crab {
                 start = *crab;
                 end =  magic;
-                /*
-                let mut add = 1;
-                for _ in *crab..magic {
-                    thisfuel += add;
-                    add += 1;
-                }
-                */
             }
             let mut add = 1;
             for _ in start..end {
                 thisfuel += add;
                 add += 1;
+            }
+            if thisfuel > fuel {
+                break;
             }
         }
         if thisfuel < fuel {
