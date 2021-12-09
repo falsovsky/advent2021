@@ -57,7 +57,7 @@ fn read_input(filename: &str) -> Vec<Entry> {
     input
 }
 
-fn solve_part1(input: &Vec<Entry>) -> u32 {
+fn solve_part1(input: &[Entry]) -> u32 {
     let mut result: u32 = 0;
     for entry in input {
         for output in &entry.output {
@@ -71,147 +71,141 @@ fn solve_part1(input: &Vec<Entry>) -> u32 {
     result
 }
 
-fn finder(patterns: &Vec<String>, wires: &mut HashMap<char, char>, digits: &HashMap<char, Vec<char>>) {
+fn finder(patterns: &[String], wires: &mut HashMap<char, char>, digits: &HashMap<char, Vec<char>>) {
     for ov in patterns {
         let ln = ov.len();
 
         let mut current: Vec<char> = Vec::new();
-        for (_, v) in &*wires {
-            current.push(*v);
+        for (_, v) in wires.clone() {
+            current.push(v);
         }
 
         // find a
-        if !wires.contains_key(&'a') && digits.contains_key(&'7') && digits.contains_key(&'1') {
-            let mut a: Vec<char> = digits.get(&'7').unwrap().to_vec();
-            let one: Vec<char> = digits.get(&'1').unwrap().to_vec();
-            for x in one {
-                a.retain(|e| *e != x);
-            }
-
-            if a.len() == 1 {
-                let mut found = false;
-                for m in current {
-                    if a[0] == m {
-                        found = true;
+        if !wires.contains_key(&'a') && digits.contains_key(&'7')
+            && digits.contains_key(&'1') {
+                let mut a: Vec<char> = digits.get(&'7').unwrap().to_vec();
+                let one: Vec<char> = digits.get(&'1').unwrap().to_vec();
+                for x in one {
+                    a.retain(|e| *e != x);
+                }
+                if a.len() == 1 {
+                    let mut found = false;
+                    for m in &current {
+                        if a[0] == *m {
+                            found = true;
+                        }
+                    }
+                    if !found {
+                        wires.insert('a', a[0]);
                     }
                 }
-                if !found {
-                    wires.insert('a', a[0]);
-                }
             }
-        }
-
-        let mut current: Vec<char> = Vec::new();
-        for (_, v) in &*wires {
-            current.push(*v);
-        }
 
         // find g
-        if !wires.contains_key(&'g') && wires.contains_key(&'a') && digits.contains_key(&'4') && ln == 6 {
-            let mut g: Vec<char> = ov.clone().chars().collect();
-            let mut a_four: Vec<char> = vec![*wires.get(&'a').unwrap()];
-            a_four.extend(digits.get(&'4').clone().unwrap());
-            for x in a_four {
-                g.retain(|e| *e != x);
-            }
-            if g.len() == 1 {
-                let mut found = false;
-                for m in current {
-                    if g[0] == m {
-                        found = true;
+        if !wires.contains_key(&'g') && wires.contains_key(&'a')
+            && digits.contains_key(&'4') && ln == 6 {
+                let mut g: Vec<char> = ov.clone().chars().collect();
+                let mut a_four: Vec<char> = vec![*wires.get(&'a').unwrap()];
+                a_four.extend(digits.get(&'4').unwrap());
+                for x in a_four {
+                    g.retain(|e| *e != x);
+                }
+                if g.len() == 1 {
+                    let mut found = false;
+                    for m in &current {
+                        if g[0] == *m {
+                            found = true;
+                        }
+                    }
+                    if !found {
+                        wires.insert('g', g[0]);
                     }
                 }
-                if !found {
-                    wires.insert('g', g[0]);
-                }
             }
-        }
-
-        let mut current: Vec<char> = Vec::new();
-        for (_, v) in &*wires {
-            current.push(*v);
-        }
 
         // find d
-        if !wires.contains_key(&'d') && wires.contains_key(&'a') && wires.contains_key(&'g') && digits.contains_key(&'1') && ln == 5 {
-            let mut d: Vec<char> = ov.clone().chars().collect();
-            let mut a_g_one: Vec<char> = vec![*wires.get(&'a').unwrap(), *wires.get(&'g').unwrap()];
-            a_g_one.extend(digits.get(&'1').clone().unwrap());
-            for x in a_g_one {
-                d.retain(|e| *e != x);
-            }
-            if d.len() == 1 {
-                let mut found = false;
-                for m in current {
-                    if d[0] == m {
-                        found = true;
+        if !wires.contains_key(&'d') && wires.contains_key(&'a')
+            && wires.contains_key(&'g')
+            && digits.contains_key(&'1') && ln == 5 {
+                let mut d: Vec<char> = ov.clone().chars().collect();
+                let mut a_g_one: Vec<char> = vec![
+                    *wires.get(&'a').unwrap(),
+                    *wires.get(&'g').unwrap()
+                ];
+                a_g_one.extend(digits.get(&'1').unwrap());
+                for x in a_g_one {
+                    d.retain(|e| *e != x);
+                }
+                if d.len() == 1 {
+                    let mut found = false;
+                    for m in &current {
+                        if d[0] == *m {
+                            found = true;
+                        }
+                    }
+                    if !found {
+                        wires.insert('d', d[0]);
                     }
                 }
-                if !found {
-                    wires.insert('d', d[0]);
-                }
             }
-        }
-
-        let mut current: Vec<char> = Vec::new();
-        for (_, v) in &*wires {
-            current.push(*v);
-        }
 
         // find b
-        if !wires.contains_key(&'b') && wires.contains_key(&'a') && wires.contains_key(&'d') && wires.contains_key(&'g') && digits.contains_key(&'1') && ln == 6 {
-            let mut b: Vec<char> = ov.clone().chars().collect();
-            let mut a_d_g_one: Vec<char> = vec![*wires.get(&'a').unwrap(), *wires.get(&'d').unwrap(), *wires.get(&'g').unwrap()];
-            a_d_g_one.extend(digits.get(&'1').clone().unwrap());
-            for x in a_d_g_one {
-                b.retain(|e| *e != x);
-            }
-            if b.len() == 1 {
-                let mut found = false;
-                for m in current {
-                    if b[0] == m {
-                        found = true;
+        if !wires.contains_key(&'b') && wires.contains_key(&'a')
+            && wires.contains_key(&'d') && wires.contains_key(&'g')
+            && digits.contains_key(&'1') && ln == 6 {
+                let mut b: Vec<char> = ov.clone().chars().collect();
+                let mut a_d_g_one: Vec<char> = vec![
+                    *wires.get(&'a').unwrap(),
+                    *wires.get(&'d').unwrap(),
+                    *wires.get(&'g').unwrap()
+                ];
+                a_d_g_one.extend(digits.get(&'1').unwrap());
+                for x in a_d_g_one {
+                    b.retain(|e| *e != x);
+                }
+                if b.len() == 1 {
+                    let mut found = false;
+                    for m in &current {
+                        if b[0] == *m {
+                            found = true;
+                        }
+                    }
+                    if !found {
+                        wires.insert('b', b[0]);
                     }
                 }
-                if !found {
-                    wires.insert('b', b[0]);
-                }
             }
-        }
-
-        let mut current: Vec<char> = Vec::new();
-        for (_, v) in &*wires {
-            current.push(*v);
-        }
 
         // find e
-        if !wires.contains_key(&'e') && wires.contains_key(&'a') && wires.contains_key(&'b') && wires.contains_key(&'g') && digits.contains_key(&'1') && ln == 6 {
-            let mut e: Vec<char> = ov.clone().chars().collect();
-            let mut a_b_g_one: Vec<char> = vec![*wires.get(&'a').unwrap(), *wires.get(&'b').unwrap(), *wires.get(&'g').unwrap()];
-            a_b_g_one.extend(digits.get(&'1').clone().unwrap());
-            for x in a_b_g_one {
-                e.retain(|e| *e != x);
-            }
-            if e.len() == 1 {
-                let mut found = false;
-                for m in current {
-                    if e[0] == m {
-                        found = true
+        if !wires.contains_key(&'e') && wires.contains_key(&'a')
+            && wires.contains_key(&'b') && wires.contains_key(&'g')
+            && digits.contains_key(&'1') && ln == 6 {
+                let mut e: Vec<char> = ov.clone().chars().collect();
+                let mut a_b_g_one: Vec<char> = vec![
+                    *wires.get(&'a').unwrap(),
+                    *wires.get(&'b').unwrap(),
+                    *wires.get(&'g').unwrap()
+                ];
+                a_b_g_one.extend(digits.get(&'1').unwrap());
+                for x in a_b_g_one {
+                    e.retain(|e| *e != x);
+                }
+                if e.len() == 1 {
+                    let mut found = false;
+                    for m in &current {
+                        if e[0] == *m {
+                            found = true
+                        }
+                    }
+                    if !found {
+                        wires.insert('e', e[0]);
                     }
                 }
-                if !found {
-                    wires.insert('e', e[0]);
-                }
             }
-        }
-
-        let mut current: Vec<char> = Vec::new();
-        for (_, v) in &*wires {
-            current.push(*v);
-        }
 
         // find c
-        if !wires.contains_key(&'c') && wires.contains_key(&'a') && wires.contains_key(&'d') && wires.contains_key(&'e')
+        if !wires.contains_key(&'c') && wires.contains_key(&'a')
+            && wires.contains_key(&'d') && wires.contains_key(&'e')
             && wires.contains_key(&'g') && ln == 5 {
                 let mut c: Vec<char> = ov.clone().chars().collect();
                 let a_d_e_g: Vec<char> = vec![
@@ -225,8 +219,8 @@ fn finder(patterns: &Vec<String>, wires: &mut HashMap<char, char>, digits: &Hash
                 }
                 if c.len() == 1 {
                     let mut found = false;
-                    for m in current {
-                        if c[0] == m {
+                    for m in &current {
+                        if c[0] == *m {
                             found = true;
                         }
                     }
@@ -235,11 +229,6 @@ fn finder(patterns: &Vec<String>, wires: &mut HashMap<char, char>, digits: &Hash
                     }
                 }
             }
-
-        let mut current: Vec<char> = Vec::new();
-        for (_, v) in &*wires {
-            current.push(*v);
-        }
 
         // find f
         if !wires.contains_key(&'f') && wires.contains_key(&'c') {
@@ -250,8 +239,8 @@ fn finder(patterns: &Vec<String>, wires: &mut HashMap<char, char>, digits: &Hash
             }
             if f.len() == 1 {
                 let mut found = false;
-                for m in current {
-                    if f[0] == m {
+                for m in &current {
+                    if f[0] == *m {
                         found = true;
                     }
                 }
@@ -260,44 +249,45 @@ fn finder(patterns: &Vec<String>, wires: &mut HashMap<char, char>, digits: &Hash
                 }
             }
         }
-
     }
 }
 
-fn solve_part2(input: &Vec<Entry>) -> u32 {
+fn solve_part2(input: &[Entry]) -> u32 {
 
     let mut result: u32 = 0;
     for value in input {
         let mut wires: HashMap<char, char> = HashMap::new();
         let mut digits: HashMap<char, Vec<char>> = HashMap::new();
+        // Get list of chars for known digits
         for ov in &value.patterns {
             let ln = ov.len();
-            // 1 c f
+            // 1
             if ln == 2 {
                 digits.insert('1', ov.clone().chars().collect());
             }
 
-            // 4 b c d f
+            // 4
             if ln == 4 {
                 digits.insert('4', ov.clone().chars().collect());
             }
 
-            // 7 a c f
+            // 7
             if ln == 3 {
                 digits.insert('7', ov.clone().chars().collect());
             }
 
-            // 8 a b c d e f g
+            // 8
             if ln == 7 {
                 digits.insert('8', ov.clone().chars().collect());
             }
         }
 
-
+        // Run finder until have the definition for the 7 wires
         while wires.len() < 6 {
             finder(&value.patterns, &mut wires, &digits);
         }
 
+        // Add correct order of wires for digits
         // 0
         let val: Vec<char> = vec![
             *wires.get(&'a').unwrap(),
@@ -397,13 +387,16 @@ fn solve_part2(input: &Vec<Entry>) -> u32 {
         ];
         digits.insert('9', val);
 
+        // Generate int from chars
         let mut str_num = String::new();
         for ov in &value.output {
+            // sort output chars
             let mut sorted_out: Vec<char> = ov.chars().collect();
-            sorted_out.sort();
+            sorted_out.sort_unstable();
             for (k, v) in &digits {
+                // sort digits
                 let mut sorted_d: Vec<char> = v.clone();
-                sorted_d.sort();
+                sorted_d.sort_unstable();
                 if sorted_out == sorted_d {
                     str_num = format!("{}{}", str_num, k);
                 }
@@ -416,7 +409,7 @@ fn solve_part2(input: &Vec<Entry>) -> u32 {
     result
 }
 
-fn solve(input: &Vec<Entry>, parts: u8) -> (u32, u32) {
+fn solve(input: &[Entry], parts: u8) -> (u32, u32) {
     let runpt1: bool = parts & PART1 != 0;
     let runpt2: bool = parts & PART2 != 0;
     let mut pt1: u32 = 0;
