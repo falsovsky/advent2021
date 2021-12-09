@@ -71,6 +71,7 @@ fn solve_part1(input: &[Entry]) -> u32 {
     result
 }
 
+#[inline]
 fn finder(patterns: &[String], wires: &mut HashMap<char, char>, digits: &HashMap<char, Vec<char>>) {
     for ov in patterns {
         let ln = ov.len();
@@ -97,6 +98,7 @@ fn finder(patterns: &[String], wires: &mut HashMap<char, char>, digits: &HashMap
                     }
                     if !found {
                         wires.insert('a', a[0]);
+                        break;
                     }
                 }
             }
@@ -119,6 +121,7 @@ fn finder(patterns: &[String], wires: &mut HashMap<char, char>, digits: &HashMap
                     }
                     if !found {
                         wires.insert('g', g[0]);
+                        break;
                     }
                 }
             }
@@ -145,6 +148,7 @@ fn finder(patterns: &[String], wires: &mut HashMap<char, char>, digits: &HashMap
                     }
                     if !found {
                         wires.insert('d', d[0]);
+                        break;
                     }
                 }
             }
@@ -172,6 +176,7 @@ fn finder(patterns: &[String], wires: &mut HashMap<char, char>, digits: &HashMap
                     }
                     if !found {
                         wires.insert('b', b[0]);
+                        break;
                     }
                 }
             }
@@ -199,6 +204,7 @@ fn finder(patterns: &[String], wires: &mut HashMap<char, char>, digits: &HashMap
                     }
                     if !found {
                         wires.insert('e', e[0]);
+                        break;
                     }
                 }
             }
@@ -226,6 +232,7 @@ fn finder(patterns: &[String], wires: &mut HashMap<char, char>, digits: &HashMap
                     }
                     if !found {
                         wires.insert('c', c[0]);
+                        break;
                     }
                 }
             }
@@ -246,6 +253,7 @@ fn finder(patterns: &[String], wires: &mut HashMap<char, char>, digits: &HashMap
                 }
                 if !found {
                     wires.insert('f', f[0]);
+                    break;
                 }
             }
         }
@@ -283,7 +291,7 @@ fn solve_part2(input: &[Entry]) -> u32 {
         }
 
         // Run finder until have the definition for the 7 wires
-        while wires.len() < 6 {
+        while wires.len() < 7 {
             finder(&value.patterns, &mut wires, &digits);
         }
 
