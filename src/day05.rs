@@ -47,15 +47,15 @@ fn read_input(filename: &str) -> Vec<Line> {
 }
 
 fn set_or_increment(visited: &mut HashMap<Point, u16>, point: &Point) {
-    if visited.contains_key(&point) {
-        let value: u16 = *visited.get(&point).unwrap();
+    if visited.contains_key(point) {
+        let value: u16 = *visited.get(point).unwrap();
         visited.insert(*point, value + 1);
     } else {
         visited.insert(*point, 1);
     }
 }
 
-fn h_or_v_lines(lines: &Vec<Line>, mut visited: &mut HashMap<Point, u16>) {
+fn h_or_v_lines(lines: &[Line], mut visited: &mut HashMap<Point, u16>) {
     for line in lines {
         if line.start.x != line.end.x && line.start.y != line.end.y {
             continue;
@@ -91,7 +91,7 @@ fn h_or_v_lines(lines: &Vec<Line>, mut visited: &mut HashMap<Point, u16>) {
     }
 }
 
-fn diagonal_lines(lines: &Vec<Line>, mut visited: &mut HashMap<Point, u16>) {
+fn diagonal_lines(lines: &[Line], mut visited: &mut HashMap<Point, u16>) {
     for line in lines {
         if line.start.x == line.end.x || line.start.y == line.end.y {
             continue;
@@ -133,11 +133,11 @@ fn diagonal_lines(lines: &Vec<Line>, mut visited: &mut HashMap<Point, u16>) {
     }
 }
 
-fn solve_part1(lines: &Vec<Line>) -> u32 {
+fn solve_part1(lines: &[Line]) -> u32 {
     let mut visited: HashMap<Point, u16> = HashMap::new();
     h_or_v_lines(lines, &mut visited);
     let mut danger = 0;
-    for (_position, value) in &visited {
+    for value in visited.values() {
         if value > &danger {
             danger = *value;
         }
@@ -148,12 +148,12 @@ fn solve_part1(lines: &Vec<Line>) -> u32 {
     visited.len().try_into().unwrap()
 }
 
-fn solve_part2(lines: &Vec<Line>) -> u32 {
+fn solve_part2(lines: &[Line]) -> u32 {
     let mut visited: HashMap<Point, u16> = HashMap::new();
     h_or_v_lines(lines, &mut visited);
     diagonal_lines(lines, &mut visited);
     let mut danger = 0;
-    for (_position, value) in &visited {
+    for value in visited.values() {
         if value > &danger {
             danger = *value;
         }
@@ -164,7 +164,7 @@ fn solve_part2(lines: &Vec<Line>) -> u32 {
     visited.len().try_into().unwrap()
 }
 
-fn solve(lines: &Vec<Line>, parts: u8) -> (u32, u32) {
+fn solve(lines: &[Line], parts: u8) -> (u32, u32) {
     let runpt1: bool = parts & PART1 != 0;
     let runpt2: bool = parts & PART2 != 0;
     let mut pt1: u32 = 0;

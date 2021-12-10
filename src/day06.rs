@@ -30,7 +30,7 @@ fn read_input() -> Vec<u8> {
     input
 }
 
-fn solver(input: Vec<u8>, size: u16) -> u64 {
+fn solver(input: &[u8], size: u16) -> u64 {
     let mut values: HashMap<u8, u64> = HashMap::new();
     // set all numbers at 0
     for x in 0..=8 {
@@ -39,11 +39,11 @@ fn solver(input: Vec<u8>, size: u16) -> u64 {
     // read input
     for value in input {
         let mut number: u64 = 1;
-        if values.contains_key(&value) {
-            number = *values.get(&value).unwrap();
+        if values.contains_key(value) {
+            number = *values.get(value).unwrap();
             number += 1;
         }
-        values.insert(value, number);
+        values.insert(*value, number);
     }
     // iterate
     for _ in 0..size {
@@ -63,16 +63,16 @@ fn solver(input: Vec<u8>, size: u16) -> u64 {
     total
 }
 
-fn solve(lines: &Vec<u8>, parts: u8) -> (u64, u64) {
+fn solve(lines: &[u8], parts: u8) -> (u64, u64) {
     let runpt1: bool = parts & PART1 != 0;
     let runpt2: bool = parts & PART2 != 0;
     let mut pt1: u64 = 0;
     let mut pt2: u64 = 0;
     if runpt1 {
-        pt1 = solver(lines.to_vec(), 80);
+        pt1 = solver(&lines.to_vec(), 80);
     }
     if runpt2 {
-        pt2 = solver(lines.to_vec(), 256);
+        pt2 = solver(&lines.to_vec(), 256);
     }
     (pt1, pt2)
 }

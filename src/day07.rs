@@ -5,6 +5,8 @@ extern crate test;
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
+use std::cmp::Ordering;
+
 
 const PART1: u8 = 0b01;
 const PART2: u8 = 0b10;
@@ -26,37 +28,49 @@ fn read_input() -> Vec<u64> {
             input.push(value.parse::<u64>().expect("Could not convert to u64"))
         }
     }
-    input.sort();
+    input.sort_unstable();
     input
 }
 
-fn solve_part1(input: &Vec<u64>) -> u64 {
+fn solve_part1(input: &[u64]) -> u64 {
     let mut fuel: u64 = 0;
     let mid = input.len() / 2;
     let magic = input[mid];
     for crab in input {
-        if *crab > magic {
-            fuel += *crab - magic;
-        } else if magic > *crab {
-            fuel += magic - *crab;
+        match crab.cmp(&magic) {
+            Ordering::Greater => { fuel += *crab - magic },
+            Ordering::Less => { fuel += magic - *crab }
+            _ =>  continue
         }
     }
     fuel
 }
 
-fn solve_part2(input: &Vec<u64>) -> u64 {
+fn solve_part2(input: &[u64]) -> u64 {
     let mut fuel: u64 = u64::MAX;
     let mut sum: u64 = 0;
     for x in input {
-        sum = sum + x;
+        sum += x;
     }
     let avg = sum as f32 / input.len() as f32;
     let magics: Vec<u64> = vec![avg.floor() as u64, avg.ceil() as u64];
     for magic in magics {
         let mut thisfuel: u64 = 0;
         for crab in input {
-            let mut start: u64 = 0;
-            let mut end: u64 = 0;
+            let start: u64;
+            let end: u64;
+            match crab.cmp(&magic) {
+                Ordering::Greater => {
+                    start = magic;
+                    end = *crab;
+                },
+                Ordering::Less => {
+                    start = *crab;
+                    end = magic;
+                }
+                _ =>  continue
+            }
+            /*
             if *crab > magic {
                 start = magic;
                 end = *crab;
@@ -64,6 +78,7 @@ fn solve_part2(input: &Vec<u64>) -> u64 {
                 start = *crab;
                 end =  magic;
             }
+            */
             let mut add = 1;
             for _ in start..end {
                 thisfuel += add;
@@ -77,7 +92,7 @@ fn solve_part2(input: &Vec<u64>) -> u64 {
     fuel
 }
 
-fn solve(lines: &Vec<u64>, parts: u8) -> (u64, u64) {
+fn solve(lines: &[u64], parts: u8) -> (u64, u64) {
     let runpt1: bool = parts & PART1 != 0;
     let runpt2: bool = parts & PART2 != 0;
     let mut pt1: u64 = 0;
