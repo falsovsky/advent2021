@@ -1,4 +1,5 @@
 #![feature(test)]
+#![allow(clippy::ptr_arg)]
 
 extern crate test;
 
@@ -67,8 +68,8 @@ fn check_horizontal(card: &Card, numbers: &Numbers) -> bool {
 fn check_vertical(card: &Card, numbers: &Numbers) -> bool {
     for column in 0..5 {
         let mut matched = 0;
-        for line in 0..5 {
-            if numbers.contains(&card[line][column]) {
+        for item in card.iter().take(5) {
+            if numbers.contains(&item[column]) {
                 matched += 1;
             }
         }

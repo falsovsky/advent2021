@@ -9,16 +9,14 @@ use std::io::BufReader;
 const PART1: u8 = 0b01;
 const PART2: u8 = 0b10;
 
-type PuzzleInput = Vec<(char, u32)>;
-
-fn read_input() -> PuzzleInput {
+fn read_input() -> Vec<(char, u32)> {
     let filename = "input/day02.txt";
     let fp = match File::open(filename) {
         Ok(file) => file,
         Err(error) => panic!("{} - {}", filename, error),
     };
     let buffer = BufReader::new(&fp);
-    let mut input: PuzzleInput = Vec::new();
+    let mut input: Vec<(char, u32)> = Vec::new();
     for line in buffer.lines() {
         let line_str = match line {
             Ok(value) => value,
@@ -33,7 +31,7 @@ fn read_input() -> PuzzleInput {
     input
 }
 
-fn solve_part1(program: &PuzzleInput) -> u32 {
+fn solve_part1(program: &[(char, u32)]) -> u32 {
     let mut point: (u32, u32) = (0, 0);
     for instruction in program {
         match instruction.0 {
@@ -46,7 +44,7 @@ fn solve_part1(program: &PuzzleInput) -> u32 {
     point.0 * point.1
 }
 
-fn solve_part2(program: &PuzzleInput) -> u32 {
+fn solve_part2(program: &[(char, u32)]) -> u32 {
     let mut point: (u32, u32) = (0, 0);
     let mut aim: u32 = 0;
     for instruction in program {
@@ -63,7 +61,7 @@ fn solve_part2(program: &PuzzleInput) -> u32 {
     point.0 * point.1
 }
 
-fn solve(program: &PuzzleInput, parts: u8) -> (u32, u32) {
+fn solve(program: &[(char, u32)], parts: u8) -> (u32, u32) {
     let runpt1: bool = parts & PART1 != 0;
     let runpt2: bool = parts & PART2 != 0;
     let mut pt1: u32 = 0;
@@ -99,14 +97,14 @@ mod day02 {
 
     #[test]
     fn part1() {
-        let input: PuzzleInput = CODE.to_vec();
+        let input = CODE.to_vec();
         let (pt1, _) = solve(&input, PART1);
         assert_eq!(pt1, 150);
     }
 
     #[test]
     fn part2() {
-        let input: PuzzleInput = CODE.to_vec();
+        let input = CODE.to_vec();
         let (_, pt2) = solve(&input, PART2);
         assert_eq!(pt2, 900);
     }

@@ -9,16 +9,15 @@ use std::io::BufReader;
 const PART1: u8 = 0b01;
 const PART2: u8 = 0b10;
 
-type Report = Vec<u32>;
 
-fn read_input() -> Report {
+fn read_input() -> Vec<u32> {
     let filename = "input/day03.txt";
     let fp = match File::open(filename) {
         Ok(file) => file,
         Err(error) => panic!("{} - {}", filename, error),
     };
     let buffer = BufReader::new(&fp);
-    let mut input: Report = Vec::new();
+    let mut input: Vec<u32> = Vec::new();
     for line in buffer.lines() {
         let line_str = match line {
             Ok(value) => value,
@@ -30,7 +29,7 @@ fn read_input() -> Report {
     input
 }
 
-fn count_bits(program: &Report, position: &usize) -> (u16, u16) {
+fn count_bits(program: &[u32], position: &usize) -> (u16, u16) {
     let mut count: (u16, u16) = (0, 0);
     for item in program {
         if item & (1 << position) == 0 {
@@ -42,7 +41,7 @@ fn count_bits(program: &Report, position: &usize) -> (u16, u16) {
     count
 }
 
-fn solve_part1(program: &Report, size: &usize) -> u32 {
+fn solve_part1(program: &[u32], size: &usize) -> u32 {
     let mut gamma: u16 = 0;
     for bit in (0..*size).rev() {
         let count = count_bits(program, &bit);
@@ -61,7 +60,7 @@ fn solve_part1(program: &Report, size: &usize) -> u32 {
     gamma as u32 * epsilon as u32
 }
 
-fn solve_part2(program: &Report, size: &usize) -> u32 {
+fn solve_part2(program: &[u32], size: &usize) -> u32 {
     let mut list1 = program.to_owned();
     let mut list2 = program.to_owned();
     for bit in (0..*size).rev() {
@@ -90,7 +89,7 @@ fn solve_part2(program: &Report, size: &usize) -> u32 {
     oxygen * co2
 }
 
-fn solve(program: &Report, size: &usize, parts: u8) -> (u32, u32) {
+fn solve(program: &[u32], size: &usize, parts: u8) -> (u32, u32) {
     let runpt1: bool = parts & PART1 != 0;
     let runpt2: bool = parts & PART2 != 0;
     let mut pt1: u32 = 0;
