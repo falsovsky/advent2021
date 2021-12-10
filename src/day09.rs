@@ -10,7 +10,7 @@ use std::collections::HashMap;
 const PART1: u8 = 0b01;
 const PART2: u8 = 0b10;
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 struct Point {
     x: i16,
     y: i16,
@@ -95,33 +95,26 @@ fn solve_part1(input: &Row) -> i16 {
 }
 
 fn is_increment(input: &Row, position: Point, mut values: &mut Vec<Point>) {
-    let top_pos = Point { x: position.x, y: position.y - 1 };
-    let bottom_pos = Point { x: position.x, y: position.y + 1 };
-    let left_pos = Point { x: position.x - 1, y: position.y };
-    let right_pos = Point { x: position.x + 1, y: position.y };
     let value = *input.get(&position).unwrap();
     if !values.contains(&position) {
-        values.push(position);
+        values.push(position.clone());
     }
-    let top = *input.get(&top_pos).unwrap_or(&-1);
-    if top >= 0 && top > value&& top < 9 {
-        is_increment(input, top_pos, &mut values);
-    }
-    let bottom = *input.get(&bottom_pos).unwrap_or(&-1);
-    if bottom >= 0 && bottom > value && bottom < 9 {
-        is_increment(input, bottom_pos, &mut values);
-    }
-    let left = *input.get(&left_pos).unwrap_or(&-1);
-    if left >= 0 && left > value && left < 9 {
-        is_increment(input, left_pos, &mut values);
-    }
-    let right = *input.get(&right_pos).unwrap_or(&-1);
-    if right >= 0 && right > value && right < 9 {
-        is_increment(input, right_pos, &mut values);
+    let pos = vec![
+        Point { x: position.x, y: position.y - 1 }, // top
+        Point { x: position.x, y: position.y + 1 }, // bottom
+        Point { x: position.x - 1, y: position.y }, // left
+        Point { x: position.x + 1, y: position.y }  // right
+    ];
+    for p in pos {
+        let v = *input.get(&p).unwrap_or(&-1);
+        if v >= 0 && v > value && v < 9 {
+            is_increment(input, p, &mut values);
+        }
     }
 }
 
 fn solve_part2(input: &Row) -> i32 {
+    // get same positions as part 1
     let (h , w) = get_dimensions(input);
     let mut points: Vec<Point> = Vec::new();
     for x in 0..w as i16{
@@ -132,13 +125,15 @@ fn solve_part2(input: &Row) -> i32 {
             }
         }
     }
-    let mut sizes: Vec<i16> = Vec::new();
     let mut total: i32 = 1;
+    // get the len of each basin
+    let mut sizes: Vec<i16> = Vec::new();
     for p in points {
         let mut values: Vec<Point> = Vec::new();
         is_increment(input, p, &mut values);
         sizes.push(values.len() as i16);
     }
+    // sort, reverse and get first 3
     sizes.sort_unstable();
     sizes.reverse();
     sizes = sizes[0..3].to_vec();
