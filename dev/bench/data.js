@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639098252143,
+  "lastUpdate": 1639100300977,
   "repoUrl": "https://github.com/falsovsky/advent2021",
   "entries": {
     "Rust Benchmark": [
@@ -701,6 +701,84 @@ window.BENCHMARK_DATA = {
             "name": "day09::bench_day09",
             "value": 6004958,
             "range": "± 13836",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "falsovsky@gmail.com",
+            "name": "Pedro de Oliveira",
+            "username": "falsovsky"
+          },
+          "committer": {
+            "email": "falsovsky@gmail.com",
+            "name": "Pedro de Oliveira",
+            "username": "falsovsky"
+          },
+          "distinct": true,
+          "id": "3b44ab674b6f9174a4c322bf8bcf59384ee7dd60",
+          "message": "Clippy fix day05 06 and 07",
+          "timestamp": "2021-12-10T01:37:41Z",
+          "tree_id": "dd1580cddfc71abd5349517671983215b00ffdbc",
+          "url": "https://github.com/falsovsky/advent2021/commit/3b44ab674b6f9174a4c322bf8bcf59384ee7dd60"
+        },
+        "date": 1639100300560,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "day01::bench_day01",
+            "value": 120168,
+            "range": "± 1079",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day02::bench_day02",
+            "value": 162623,
+            "range": "± 938",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day03::bench_day03",
+            "value": 106207,
+            "range": "± 1645",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day04::bench_day04",
+            "value": 7836669,
+            "range": "± 69221",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day05::bench_day05",
+            "value": 30174088,
+            "range": "± 467333",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day06::bench_day06",
+            "value": 119364,
+            "range": "± 708",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day07::bench_day07",
+            "value": 42578,
+            "range": "± 1031",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day08::bench_day08",
+            "value": 3823307,
+            "range": "± 13794",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day09::bench_day09",
+            "value": 6029055,
+            "range": "± 18678",
             "unit": "ns/iter"
           }
         ]
