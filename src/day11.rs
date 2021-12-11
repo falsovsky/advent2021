@@ -68,7 +68,6 @@ fn get_size(input: &HashMap<Position, Item>) -> usize {
         let default = Item::new(255, false);
         let position = Position::new(x as i8, 0);
         let item = input.get(&position).unwrap_or(&default);
-        // valores do adjacente
         let (value, _flashed) = item.get_tuple();
         if value == 255 {
             break;
@@ -90,15 +89,10 @@ fn flash(input: &mut HashMap<Position, Item>, position: Position) {
         Position::new(x - 1, y + 1), // bottom left
         Position::new(x + 1, y + 1), // bottom right
     ];
-
-    // mete a 0 e marca como flashado
     input.insert(position, Item::new(0, true));
-
-    // percorre todos à volta
     for adjacent in positions {
         let default = Item::new(255, false);
         let item = input.get(&adjacent).unwrap_or(&default);
-        // valores do adjacente
         let (mut value, flashed) = item.get_tuple();
         if value != 255 {
             if value < 9 {
@@ -113,57 +107,15 @@ fn flash(input: &mut HashMap<Position, Item>, position: Position) {
     }
 }
 
-fn solve_part1(input: &HashMap<Position, Item>) -> u64 {
+fn run_steps(input: &HashMap<Position, Item>, steps: usize, parts: u8) -> u64 {
+    let runpt2: bool = parts & PART2 != 0;
     let mut flashes: u64 = 0;
     let size = get_size(input);
     let mut myinput: HashMap<Position, Item> = HashMap::new();
     for (p, i) in input {
         myinput.insert(*p, *i);
     }
-    for _ in 0..100 {
-        // Increment
-        for x in 0..size {
-            for y in 0..size {
-                let pos = Position::new(x as i8, y as i8);
-                let item = *myinput.get(&pos).unwrap();
-                let val = item.value + 1;
-                myinput.insert(pos, Item::new(val, item.exploded));
-            }
-        }
-        // Check for explosions
-        for x in 0..size {
-            for y in 0..size {
-                let pos = Position::new(x as i8, y as i8);
-                let item = myinput.get(&pos).unwrap();
-                if item.value == 10 {
-                    flash(&mut myinput, pos);
-                }
-            }
-        }
-        // Set exploded to 0
-        for x in 0..size {
-            for y in 0..size {
-                let pos = Position::new(x as i8, y as i8);
-                let item = myinput.get(&pos).unwrap();
-                if item.exploded {
-                    myinput.insert(pos, Item::new(0, false));
-                    flashes += 1;
-                }
-            }
-        }
-    }
-
-   flashes
-}
-
-fn solve_part2(input: &HashMap<Position, Item>) -> u64 {
-    let mut step: u64 = 1;
-    let size = get_size(input);
-    let mut myinput: HashMap<Position, Item> = HashMap::new();
-    for (p, i) in input {
-        myinput.insert(*p, *i);
-    }
-    'outer: loop {
+    for step in 0..steps {
         // Increment
         for x in 0..size {
             for y in 0..size {
@@ -191,16 +143,24 @@ fn solve_part2(input: &HashMap<Position, Item>) -> u64 {
                 let item = myinput.get(&pos).unwrap();
                 if item.exploded {
                     myinput.insert(pos, Item::new(0, false));
-                    explosions += 1;
+                    flashes += 1;
+                    explosions += 1
                 }
             }
         }
-        if explosions == 100 {
-            break 'outer;
+        if explosions == 100 && runpt2 {
+            return step as u64 + 1;
         }
-        step += 1;
     }
-    step
+    flashes
+}
+
+fn solve_part1(input: &HashMap<Position, Item>) -> u64 {
+    run_steps(input, 100, PART1)
+}
+
+fn solve_part2(input: &HashMap<Position, Item>) -> u64 {
+    run_steps(input,  usize::max_value(), PART2)
 }
 
 fn solve(input: &HashMap<Position, Item>, parts: u8) -> (u64, u64) {
