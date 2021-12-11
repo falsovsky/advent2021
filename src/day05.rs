@@ -55,7 +55,7 @@ fn set_or_increment(visited: &mut HashMap<Point, u16>, point: &Point) {
     }
 }
 
-fn h_or_v_lines(lines: &[Line], mut visited: &mut HashMap<Point, u16>) {
+fn h_or_v_lines(lines: &[Line], visited: &mut HashMap<Point, u16>) {
     for line in lines {
         if line.start.x != line.end.x && line.start.y != line.end.y {
             continue;
@@ -64,34 +64,34 @@ fn h_or_v_lines(lines: &[Line], mut visited: &mut HashMap<Point, u16>) {
         if line.start.x < line.end.x && line.start.y == line.end.y {
             for x in line.start.x..=line.end.x {
                 let point: Point = Point { x, y: line.start.y };
-                set_or_increment(&mut visited, &point);
+                set_or_increment(visited, &point);
             }
         }
         // x1 > x2 && y1 == y2
         if line.start.x > line.end.x && line.start.y == line.end.y {
             for x in line.end.x..=line.start.x {
                 let point: Point = Point { x, y: line.start.y };
-                set_or_increment(&mut visited, &point);
+                set_or_increment(visited, &point);
             }
         }
         // x1 == x2 && y1 < y2
         if line.start.x == line.end.x && line.start.y < line.end.y {
             for y in line.start.y..=line.end.y {
                 let point: Point = Point { x: line.start.x, y };
-                set_or_increment(&mut visited, &point);
+                set_or_increment(visited, &point);
             }
         }
         // x1 == x2 && y1 > y2
         if line.start.x == line.end.x && line.start.y > line.end.y {
             for y in line.end.y..=line.start.y {
                 let point: Point = Point { x: line.start.x, y };
-                set_or_increment(&mut visited, &point);
+                set_or_increment(visited, &point);
             }
         }
     }
 }
 
-fn diagonal_lines(lines: &[Line], mut visited: &mut HashMap<Point, u16>) {
+fn diagonal_lines(lines: &[Line], visited: &mut HashMap<Point, u16>) {
     for line in lines {
         if line.start.x == line.end.x || line.start.y == line.end.y {
             continue;
@@ -101,7 +101,7 @@ fn diagonal_lines(lines: &[Line], mut visited: &mut HashMap<Point, u16>) {
         // x1 < x2 && y1 < y2
         if line.start.x < line.end.x && line.start.y < line.end.y {
             while position.x <= finish.x && position.y <= finish.y {
-                set_or_increment(&mut visited, &position);
+                set_or_increment(visited, &position);
                 position.x += 1;
                 position.y += 1;
             }
@@ -109,7 +109,7 @@ fn diagonal_lines(lines: &[Line], mut visited: &mut HashMap<Point, u16>) {
         // x1 > x2 && y1 > y2
         if line.start.x > line.end.x && line.start.y > line.end.y {
             while position.x >= finish.x && position.y >= finish.y {
-                set_or_increment(&mut visited, &position);
+                set_or_increment(visited, &position);
                 position.x -= 1;
                 position.y -= 1;
             }
@@ -117,7 +117,7 @@ fn diagonal_lines(lines: &[Line], mut visited: &mut HashMap<Point, u16>) {
         // x1 > x2 && y1 < y2
         if line.start.x > line.end.x && line.start.y < line.end.y {
             while position.x >= finish.x && position.y <= finish.y {
-                set_or_increment(&mut visited, &position);
+                set_or_increment(visited, &position);
                 position.x -= 1;
                 position.y += 1;
             }
@@ -125,7 +125,7 @@ fn diagonal_lines(lines: &[Line], mut visited: &mut HashMap<Point, u16>) {
         // x1 < x2 && y1 > y2
         if line.start.x < line.end.x && line.start.y > line.end.y {
             while position.x <= finish.x && position.y >= finish.y {
-                set_or_increment(&mut visited, &position);
+                set_or_increment(visited, &position);
                 position.x += 1;
                 position.y -= 1;
             }

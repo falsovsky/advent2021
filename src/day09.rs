@@ -94,7 +94,7 @@ fn solve_part1(input: &Row) -> i16 {
     total
 }
 
-fn is_increment(input: &Row, position: Point, mut values: &mut Vec<Point>) {
+fn is_increment(input: &Row, position: Point, values: &mut Vec<Point>) {
     let value = *input.get(&position).unwrap();
     if !values.contains(&position) {
         values.push(position.clone());
@@ -108,7 +108,7 @@ fn is_increment(input: &Row, position: Point, mut values: &mut Vec<Point>) {
     for p in pos {
         let v = *input.get(&p).unwrap_or(&-1);
         if v >= 0 && v > value && v < 9 {
-            is_increment(input, p, &mut values);
+            is_increment(input, p, values);
         }
     }
 }
