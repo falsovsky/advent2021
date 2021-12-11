@@ -26,7 +26,7 @@ impl Position {
     pub fn new(x: i8, y: i8) -> Position {
         Position { x, y }
     }
-    pub fn get_tuple(self: &Self) -> (i8, i8) {
+    pub fn get_tuple(&self) -> (i8, i8) {
         (self.x, self.y)
     }
 }
@@ -35,7 +35,7 @@ impl Item {
     pub fn new(value: u8, exploded: bool) -> Item {
         Item { value, exploded }
     }
-    pub fn get_tuple(self: &Self) -> (u8, bool) {
+    pub fn get_tuple(&self) -> (u8, bool) {
         (self.value, self.exploded)
     }
 }
@@ -78,22 +78,6 @@ fn get_size(input: &HashMap<Position, Item>) -> usize {
     x
 }
 
-/*
-fn print_status(input: &HashMap<Position, Item>) {
-    let size = get_size(input);
-    for x in 0..size {
-        for y in 0..size {
-            let pos = Position::new(x as i8, y as i8);
-            let val = input.get(&pos).unwrap().value;
-            print!("{}", val);
-
-        }
-        println!();
-    }
-    println!();
-}
-*/
-
 fn flash(input: &mut HashMap<Position, Item>, position: Position) {
     let (x, y) = position.get_tuple();
     let positions = vec![
@@ -120,12 +104,10 @@ fn flash(input: &mut HashMap<Position, Item>, position: Position) {
             if value < 9 {
                 value += 1;
                 input.insert(adjacent, Item::new(value, flashed));
+            } else if !flashed {
+                flash(input, adjacent);
             } else {
-                if !flashed {
-                    flash(input, adjacent);
-                } else {
-                    return;
-                }
+                return;
             }
         }
     }
