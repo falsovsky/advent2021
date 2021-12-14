@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639265944127,
+  "lastUpdate": 1639443338016,
   "repoUrl": "https://github.com/falsovsky/advent2021",
   "entries": {
     "Rust Benchmark": [
@@ -1121,6 +1121,102 @@ window.BENCHMARK_DATA = {
             "name": "day11::bench_day11",
             "value": 5475688,
             "range": "± 138908",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "falsovsky@gmail.com",
+            "name": "Pedro de Oliveira",
+            "username": "falsovsky"
+          },
+          "committer": {
+            "email": "falsovsky@gmail.com",
+            "name": "Pedro de Oliveira",
+            "username": "falsovsky"
+          },
+          "distinct": true,
+          "id": "7f9eb15eb62115c08972f61e584468725b1dfd56",
+          "message": "Add day13 ultra sucky",
+          "timestamp": "2021-12-14T00:46:16Z",
+          "tree_id": "878f3b0ce3ea2ec2d103712b28471d4e78fa5329",
+          "url": "https://github.com/falsovsky/advent2021/commit/7f9eb15eb62115c08972f61e584468725b1dfd56"
+        },
+        "date": 1639443337030,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "day01::bench_day01",
+            "value": 120164,
+            "range": "± 877",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day02::bench_day02",
+            "value": 161026,
+            "range": "± 3055",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day03::bench_day03",
+            "value": 112496,
+            "range": "± 998",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day04::bench_day04",
+            "value": 8080372,
+            "range": "± 67314",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day05::bench_day05",
+            "value": 34244877,
+            "range": "± 1285266",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day06::bench_day06",
+            "value": 117714,
+            "range": "± 640",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day07::bench_day07",
+            "value": 42629,
+            "range": "± 1145",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day08::bench_day08",
+            "value": 3767966,
+            "range": "± 26654",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day09::bench_day09",
+            "value": 6007688,
+            "range": "± 20170",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day10::bench_day10",
+            "value": 1074953,
+            "range": "± 8735",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day11::bench_day11",
+            "value": 4490018,
+            "range": "± 47188",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "day13::bench_day13",
+            "value": 1533607248,
+            "range": "± 813242",
             "unit": "ns/iter"
           }
         ]
