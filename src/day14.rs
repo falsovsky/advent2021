@@ -10,11 +10,12 @@ use std::collections::HashMap;
 const PART1: u8 = 0b01;
 const PART2: u8 = 0b10;
 
-#[derive(Debug)]
 struct Input {
-    template: String,
+    template: Vec<char>,
     rules: HashMap<(char, char), char>
 }
+
+type State = HashMap<(char, char), u64>;
 
 fn read_input(filename: &str) -> Input {
     let fp = match File::open(filename) {
@@ -22,7 +23,7 @@ fn read_input(filename: &str) -> Input {
         Err(error) => panic!("{} - {}", filename, error),
     };
     let buffer = BufReader::new(&fp);
-    let mut template: String = String::new();
+    let mut template: Vec<char> = Vec::new();
     let mut rules: HashMap<(char, char), char> = HashMap::new();
     for (idx, line) in buffer.lines().enumerate() {
         let line_str = match line {
@@ -30,10 +31,12 @@ fn read_input(filename: &str) -> Input {
             Err(error) => panic!("Could not read anything - {}", error),
         };
         if idx == 0 {
-            template = line_str;
+            // read template
+            template = line_str.chars().collect();
             continue;
         }
         if idx == 1 {
+            // ghetto ignore empty line
             continue;
         }
         let values = line_str.split(" -> ").collect::<Vec<&str>>();
@@ -42,18 +45,15 @@ fn read_input(filename: &str) -> Input {
         let mut value_chars = values[1].chars();
         let value: char = value_chars.next().unwrap();
         rules.insert(pair, value);
-
     }
     Input { template, rules }
 }
 
-fn parse_template(input: &Input) -> HashMap<(char, char), u64> {
-    let mut old: HashMap<(char, char), u64> = HashMap::new();
+fn parse_template(input: &Input) -> State {
+    let mut old: State = HashMap::new();
     let mut idx = 0;
     while idx < input.template.len() - 1 {
-        let pair_c = input.template[idx..=idx+1].to_string();
-        let mut pair_chars = pair_c.chars();
-        let pair: (char, char) = (pair_chars.next().unwrap(), pair_chars.next().unwrap());
+        let pair: (char, char) = (input.template[idx], input.template[idx + 1]);
         if input.rules.contains_key(&pair) {
             let mut current: u64 = *old.get(&pair).unwrap_or(&0);
             current += 1;
@@ -64,10 +64,11 @@ fn parse_template(input: &Input) -> HashMap<(char, char), u64> {
     old
 }
 
-fn do_steps(input: &Input, steps: u8) -> HashMap<(char, char), u64> {
-    let mut old = parse_template(input);
-    let mut new: HashMap<(char, char), u64> = HashMap::new();
+fn do_steps(input: &Input, steps: u8) -> State {
+    let mut old: State = parse_template(input);
+    let mut new: State;
     for _ in 0..steps {
+        new = HashMap::new();
         for (k, v) in &old {
             let middle: char = *input.rules.get(k).unwrap();
             let start: (char, char) = (k.0 , middle);
@@ -84,41 +85,38 @@ fn do_steps(input: &Input, steps: u8) -> HashMap<(char, char), u64> {
             }
         }
         old = new;
-        new = HashMap::new();
     }
     old
 }
 
-fn get_result(input: &Input, polymers: &HashMap<(char, char), u64>) -> u64{
+fn get_result(input: &Input, state: &State) -> u64{
     let mut counter: HashMap<char, u64> = HashMap::new();
-    for (k, v) in polymers {
+    for (k, v) in state {
         let ch1: char = k.0;
         let mut val: u64 = *counter.get(&ch1).unwrap_or(&0);
         val += v;
         counter.insert(ch1, val);
     }
     // Add last char from template
-    let last: char = input.template.chars().last().unwrap();
+    let last: char = input.template[input.template.len() - 1];
     let mut val: u64 = *counter.get(&last).unwrap_or(&0);
     val += 1;
     counter.insert(last, val);
 
-    let mut sorted: Vec<(char, u64)> = Vec::new();
-    for (k, v) in counter {
-        sorted.push((k, v));
-    }
-    sorted.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
-    (sorted[sorted.len() - 1].1 - sorted[0].1) as u64
+    // Sort values
+    let mut sorted: Vec<u64> = counter.into_values().collect();
+    sorted.sort_unstable();
+    sorted[sorted.len() - 1] - sorted[0]
 }
 
 fn solve_part1(input: &Input) -> u64 {
-    let result = do_steps(input, 10);
-    get_result(input, &result)
+    let state: State = do_steps(input, 10);
+    get_result(input, &state)
 }
 
 fn solve_part2(input: &Input) -> u64 {
-    let result = do_steps(input, 40);
-    get_result(input, &result)
+    let state: State = do_steps(input, 40);
+    get_result(input, &state)
 }
 
 fn solve(input: &Input, parts: u8) -> (u64, u64) {
